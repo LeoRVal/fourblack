@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore camisetas e coleções Fourblack.">
+  <title>Produtos — Fourblack</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body data-page="listing">
+  <div class="announcement"><span>FAITH · STREET · PEOPLE</span><span>Frete grátis acima de R$ 299 para todo Brasil</span><a href="mailto:oi@fourblack.com.br">Fale com a gente</a></div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Fourblack, página inicial">FOURBLACK<span>FAITH<br>STREET</span></a><button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="Navegação principal"><a href="produtos.html">Lançamentos</a><a href="produtos.html?categoria=Camisetas">Masculino</a><a href="produtos.html?categoria=Camisetas">Feminino</a><a href="produtos.html">Acessórios</a><a href="produtos.html">Coleções</a></nav>
+    <div class="header-actions"><a class="icon-link search-link" href="produtos.html" aria-label="Buscar">⌕</a><a class="icon-link account-link" href="mailto:oi@fourblack.com.br" aria-label="Minha conta">♙</a><a class="icon-link bag-link" href="carrinho.html" aria-label="Carrinho">♧<span class="cart-count">0</span></a></div>
+  </header>
+  <main>
+    <section class="page-banner"><div><p class="eyebrow">Fourblack / Loja</p><h1>Produtos</h1><p>Peças feitas para acompanhar a sua história.</p></div></section>
+    <div class="breadcrumb"><a href="index.html">Início</a><span>›</span><span>Produtos</span></div>
+    <section class="catalog section">
+      <aside class="filters" aria-label="Filtros de produtos">
+        <div class="filter-title"><h2>Filtrar por</h2><button class="filter-clear" type="button">Limpar</button></div>
+        <details open><summary>Categorias</summary><label><input type="checkbox" name="category" value="Camisetas"> Camisetas</label><label><input type="checkbox" name="category" value="Bonés"> Bonés</label></details>
+        <details open><summary>Coleções</summary><label><input type="checkbox" name="collection" value="Faith"> Faith</label><label><input type="checkbox" name="collection" value="Samba"> Samba</label><label><input type="checkbox" name="collection" value="Street"> Street</label><label><input type="checkbox" name="collection" value="Urban"> Urban</label></details>
+        <details open><summary>Tamanho</summary><div class="filter-sizes"><label><input type="checkbox" name="size" value="P"><span>P</span></label><label><input type="checkbox" name="size" value="M"><span>M</span></label><label><input type="checkbox" name="size" value="G"><span>G</span></label><label><input type="checkbox" name="size" value="GG"><span>GG</span></label><label><input type="checkbox" name="size" value="XG"><span>XG</span></label></div></details>
+        <details open><summary>Preço</summary><label class="price-label" for="price-filter">Até <output id="price-output">R$ 180,00</output></label><input id="price-filter" type="range" min="50" max="180" value="180" step="1"></details>
+      </aside>
+      <div class="catalog-content"><div class="catalog-toolbar"><p><strong data-product-count>0</strong> produtos</p><label for="sort-products">Ordenar por <select id="sort-products"><option value="featured">Mais relevantes</option><option value="price-asc">Menor preço</option><option value="price-desc">Maior preço</option><option value="name">Nome</option></select></label><button class="mobile-filter-button" type="button">Filtros</button></div><div class="product-grid catalog-grid" data-product-grid="catalog"></div><p class="empty-state" hidden>Nenhum produto encontrado. Ajuste os filtros e tente novamente.</p></div>
+    </section>
+  </main>
+  <footer class="site-footer"><a class="brand brand-footer" href="index.html">FOURBLACK<span>FAITH<br>STREET</span></a><p>Faith · Street · People<br>Da rua para a vida.</p><nav><a href="produtos.html">Loja</a><a href="carrinho.html">Meu carrinho</a><a href="mailto:oi@fourblack.com.br">Atendimento</a></nav><small>© 2026 Fourblack. Feito para vestir histórias.</small></footer>
+</body>
+</html>
