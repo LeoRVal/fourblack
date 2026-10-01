@@ -36,7 +36,7 @@ const updateCartCount = () => {
   document.querySelectorAll(".cart-count").forEach(element => { element.textContent = String(count); });
 };
 
-function createProductCard(product) {
+function createProductCard(product, showCta = true) {
   return `<article class="product-card">
     <a class="product-card-image" href="produto.html?id=${encodeURIComponent(product.id)}" aria-label="Ver ${product.name}">
       <span class="tag">Novo</span><img src="${product.image}" alt="${product.name}" loading="lazy">
@@ -45,7 +45,7 @@ function createProductCard(product) {
       <a class="product-card-title" href="produto.html?id=${encodeURIComponent(product.id)}">${product.name}</a>
       <p class="product-card-price">${money(product.price)}</p><p class="product-card-installments">ou 3x de ${money(product.price / 3)} sem juros</p>
       <div class="product-swatches" aria-label="Cores disponíveis"><i></i><i></i></div>
-      <a class="button button-dark product-cta" href="produto.html?id=${encodeURIComponent(product.id)}">Ver produto <span>↗</span></a>
+      ${showCta ? `<a class="button button-dark product-cta" href="produto.html?id=${encodeURIComponent(product.id)}">Ver produto <span>↗</span></a>` : ""}
     </div>
   </article>`;
 }
@@ -53,8 +53,8 @@ function createProductCard(product) {
 function renderProductGrid() {
   document.querySelectorAll("[data-product-grid]").forEach(grid => {
     const mode = grid.dataset.productGrid;
-    const products = mode === "featured" ? PRODUCTS.slice(0, 4) : mode === "related" ? PRODUCTS.slice(1, 5) : PRODUCTS;
-    grid.innerHTML = products.map(createProductCard).join("");
+    const products = mode === "featured" ? PRODUCTS : mode === "related" ? PRODUCTS.slice(1, 5) : PRODUCTS;
+    grid.innerHTML = products.map(product => createProductCard(product, mode !== "featured")).join("");
   });
 }
 
@@ -87,7 +87,7 @@ function setupListing() {
     if (sort === "price-asc") visible = visible.sort((a, b) => a.price - b.price);
     if (sort === "price-desc") visible = visible.sort((a, b) => b.price - a.price);
     if (sort === "name") visible = visible.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
-    grid.innerHTML = visible.map(createProductCard).join("");
+    grid.innerHTML = visible.map(product => createProductCard(product)).join("");
     document.querySelector("[data-product-count]").textContent = String(visible.length);
     document.querySelector(".empty-state").hidden = visible.length > 0;
     document.querySelector("#price-output").textContent = money(maxPrice);
@@ -273,6 +273,59 @@ function setupMobileMenu() {
   });
 }
 
+function setupHeroCarousel() {
+  const image = document.querySelector(".hero-slide");
+  const dots = [...document.querySelectorAll(".hero-dot")];
+  if (!image || dots.length < 2) return;
+
+  const slides = [
+    { src: "assets/HOME%20-%20FOURBLACK/FOURBLACK%20HOME%2001.png", alt: "Faith Street People — da rua para a vida" },
+    { src: "assets/HOME%20-%20FOURBLACK/FOURBLACK%20HOME%2002%20(2).png", alt: "Faith Music People — do samba para a vida" }
+  ];
+  slides.slice(1).forEach(slide => {
+    const preload = new Image();
+    preload.src = slide.src;
+  });
+  let activeSlide = 0;
+  let timer;
+
+  const showSlide = index => {
+    activeSlide = (index + slides.length) % slides.length;
+    image.classList.add("is-changing");
+    window.setTimeout(() => {
+      image.src = slides[activeSlide].src;
+      image.alt = slides[activeSlide].alt;
+      image.classList.remove("is-changing");
+    }, 180);
+    dots.forEach((dot, dotIndex) => {
+      const active = dotIndex === activeSlide;
+      dot.classList.toggle("active", active);
+      dot.setAttribute("aria-pressed", String(active));
+    });
+  };
+
+  const restartTimer = () => {
+    window.clearInterval(timer);
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      timer = window.setInterval(() => showSlide(activeSlide + 1), 8000);
+    }
+  };
+
+  document.querySelector(".hero-previous").addEventListener("click", () => {
+    showSlide(activeSlide - 1);
+    restartTimer();
+  });
+  document.querySelector(".hero-next").addEventListener("click", () => {
+    showSlide(activeSlide + 1);
+    restartTimer();
+  });
+  dots.forEach((dot, index) => dot.addEventListener("click", () => {
+    showSlide(index);
+    restartTimer();
+  }));
+  restartTimer();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   updateCartCount();
   renderProductGrid();
@@ -282,4 +335,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCheckout();
   setupConfirmation();
   setupMobileMenu();
+  setupHeroCarousel();
 });
