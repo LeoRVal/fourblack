@@ -116,7 +116,7 @@ h1,h2{font-family:"Barlow Condensed","Arial Narrow",Impact,sans-serif;text-trans
 .catalog-toolbar p{margin:0;font-size:11px;text-transform:uppercase}
 .catalog-toolbar label{font-size:9px;text-transform:uppercase;font-weight:700}
 .catalog-toolbar select{border:0;background:white;padding:5px 0 5px 8px;font-weight:600;font-size:10px}
-.catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:27px 18px}
+.catalog-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:22px 12px}
 .catalog-grid .product-card-title{min-height:0}
 .mobile-filter-button{display:none}
 .empty-state{padding:45px 15px;background:var(--mist);text-align:center;color:#666}
@@ -205,7 +205,7 @@ fieldset legend{font-size:10px;text-transform:uppercase;font-weight:700;margin-b
 
 @media(max-width:1000px){
   .site-header{gap:18px}.main-nav{gap:16px;font-size:9px}.header-actions{gap:14px}
-  .catalog{grid-template-columns:175px minmax(0,1fr);gap:24px}.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .catalog{grid-template-columns:175px minmax(0,1fr);gap:24px}.catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 12px}
   .product-detail{gap:34px}.product-gallery{grid-template-columns:58px minmax(0,1fr)}
   .cart-layout{grid-template-columns:minmax(0,1fr) 310px;gap:25px}
   .confirmation-page{grid-template-columns:minmax(0,1fr) 320px;gap:25px}

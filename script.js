@@ -36,7 +36,7 @@ const updateCartCount = () => {
   document.querySelectorAll(".cart-count").forEach(element => { element.textContent = String(count); });
 };
 
-function createProductCard(product, showCta = true) {
+function createProductCard(product, showCta = true, quickBuy = false) {
   return `<article class="product-card">
     <a class="product-card-image" href="produto.html?id=${encodeURIComponent(product.id)}" aria-label="Ver ${product.name}">
       <span class="tag">Novo</span><img src="${product.image}" alt="${product.name}" loading="lazy">
@@ -45,7 +45,9 @@ function createProductCard(product, showCta = true) {
       <a class="product-card-title" href="produto.html?id=${encodeURIComponent(product.id)}">${product.name}</a>
       <p class="product-card-price">${money(product.price)}</p><p class="product-card-installments">ou 3x de ${money(product.price / 3)} sem juros</p>
       <div class="product-swatches" aria-label="Cores disponíveis"><i></i><i></i></div>
-      ${showCta ? `<a class="button button-dark product-cta" href="produto.html?id=${encodeURIComponent(product.id)}">Ver produto <span>↗</span></a>` : ""}
+      ${showCta ? quickBuy
+        ? `<button class="button button-dark product-cta" type="button" data-quick-buy="${product.id}">Comprar <span>＋</span></button>`
+        : `<a class="button button-dark product-cta" href="produto.html?id=${encodeURIComponent(product.id)}">Ver produto <span>↗</span></a>` : ""}
     </div>
   </article>`;
 }
@@ -54,7 +56,32 @@ function renderProductGrid() {
   document.querySelectorAll("[data-product-grid]").forEach(grid => {
     const mode = grid.dataset.productGrid;
     const products = mode === "featured" ? PRODUCTS : mode === "related" ? PRODUCTS.slice(1, 5) : PRODUCTS;
-    grid.innerHTML = products.map(product => createProductCard(product, mode !== "featured")).join("");
+    grid.innerHTML = products.map(product => createProductCard(product, mode !== "featured", mode === "catalog")).join("");
+    if (mode === "catalog") bindQuickBuyButtons(grid);
+  });
+}
+
+function addProductToCart(product, size, color) {
+  const cart = getCart();
+  const existing = cart.find(item => item.id === product.id && item.size === size && item.color === color);
+  if (existing) existing.quantity += 1;
+  else cart.push({ id: product.id, quantity: 1, size, color });
+  saveCart(cart);
+}
+
+function bindQuickBuyButtons(grid) {
+  grid.querySelectorAll("[data-quick-buy]").forEach(button => {
+    button.addEventListener("click", () => {
+      const product = findProduct(button.dataset.quickBuy);
+      if (!product) {
+        console.error(`Produto não encontrado: ${button.dataset.quickBuy}`);
+        showToast("Não foi possível adicionar esse produto.");
+        return;
+      }
+      const size = "M";
+      addProductToCart(product, size, product.color || "Preta");
+      showToast(`Adicionado ao carrinho: ${product.name} · Tam. ${size}.`);
+    });
   });
 }
 
@@ -87,7 +114,8 @@ function setupListing() {
     if (sort === "price-asc") visible = visible.sort((a, b) => a.price - b.price);
     if (sort === "price-desc") visible = visible.sort((a, b) => b.price - a.price);
     if (sort === "name") visible = visible.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
-    grid.innerHTML = visible.map(product => createProductCard(product)).join("");
+    grid.innerHTML = visible.map(product => createProductCard(product, true, true)).join("");
+    bindQuickBuyButtons(grid);
     document.querySelector("[data-product-count]").textContent = String(visible.length);
     document.querySelector(".empty-state").hidden = visible.length > 0;
     document.querySelector("#price-output").textContent = money(maxPrice);
@@ -144,12 +172,8 @@ function setupProduct() {
       showToast("Selecione um tamanho antes de adicionar.");
       return;
     }
-    const cart = getCart();
     const color = document.querySelector("[data-selected-color]").textContent;
-    const existing = cart.find(item => item.id === product.id && item.size === selectedSize.textContent && item.color === color);
-    if (existing) existing.quantity += 1;
-    else cart.push({ id: product.id, quantity: 1, size: selectedSize.textContent, color });
-    saveCart(cart);
+    addProductToCart(product, selectedSize.textContent, color);
     showToast("Produto adicionado ao carrinho.");
   };
   document.querySelector(".add-to-cart").addEventListener("click", addToCart);
